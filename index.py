@@ -37,7 +37,7 @@ def create_index(bundle_data):
             if bundle["archive"] == False:
                 bundle_title = bundle["title"]
                 bundle_id = bundle["id"]
-                content += f"* [{bundle_title.title()}]({TB_PATH}/{TB_DIR}/{bundle_id}/text.markdown)\n"
+                content += f"* [{bundle_title}]({TB_PATH}/{TB_DIR}/{bundle_id}/text.markdown)\n"
     index_path = f"{TB_PATH}/{TB_DIR}"
     with open(f"{index_path}/index.markdown", "w") as f:
         f.write(content)
