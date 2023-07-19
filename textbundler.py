@@ -14,7 +14,7 @@ def init():
 
 
 def create_dir():
-    bundle_name = str(uuid.uuid4())
+    bundle_name = uuid.uuid4().hex
     bundle_path = os.path.join(TB_PATH, TB_DIR, bundle_name)
     Path(bundle_path).mkdir(parents=True, exist_ok=True)
     return bundle_name
