@@ -31,11 +31,10 @@ def update_title(tb_dir, frontmatter):
     if "[" in title:
         title = title[0 : title.index("[")]
     for f_key, f_value in frontmatter.items():
-        print(f_value)
         if f_key == "due" and f_value != "null":
-            title += f"[{f_value}]"
+            title += f"[{f_key}: {f_value}]"
         if f_key == "priority" and f_value != "null":
-            title += f"[{f_value}]"
+            title += f"[{f_key}: {f_value}]"
     lines[0] = f"{title}\n"
     with open(f"{tb_dir}/text.markdown", "w") as file:
         file.writelines(lines)

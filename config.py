@@ -16,10 +16,7 @@ TB_INFO = {
     "date_due": None,
 }
 TB_FRONTMATTER = {
-    "type": None,
-    "scheduled": None,
-    "due": None,
-    "tags": [],
-    "archive": False,
     "priority": None,
+    "due": None,
+    "archive": False,
 }
