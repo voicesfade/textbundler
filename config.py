@@ -1,7 +1,7 @@
 import os
 
 BROWSER_NAME = "Google Chrome"
-TB_PATH = os.path.expanduser("~") # User's home directory
+TB_PATH = os.path.expanduser("~")  # User's home directory
 # TB_PATH = os.path.expanduser(
 #     "~/Library/Mobile%20Documents/com~apple~CloudDocs"
 # )  # User's iCloud directory
@@ -13,8 +13,12 @@ TB_INFO = {
     "path": None,
     "date_created": None,
     "date_updated": None,
-    "date_scheduled": None,
     "date_due": None,
+}
+TB_FRONTMATTER = {
+    "type": None,
+    "scheduled": None,
+    "due": None,
     "tags": [],
     "archive": False,
     "priority": None,
