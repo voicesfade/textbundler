@@ -5,6 +5,7 @@ import uuid
 import json
 import datetime
 from config import BROWSER_NAME, TB_PATH, TB_DIR, TB_INFO, TB_TYPES
+import index
 
 
 def init():
@@ -26,6 +27,14 @@ def create_text(bundle_dir, bundle_title, bundle_type):
         note = f"""# {bundle_title}
 
 [{bundle_type.title()}s]({TB_PATH}/{TB_DIR}/index.markdown#{bundle_type}) | [Edit](vscode://file{bundle_path}/?windowId=_blank)
+
+```yaml
+status: null
+due: null
+priority: null
+jira: null
+archive: false
+```
 """
         f.write(note)
     return "Success"

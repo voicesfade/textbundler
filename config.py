@@ -13,10 +13,11 @@ TB_INFO = {
     "path": None,
     "date_created": None,
     "date_updated": None,
-    "date_due": None,
 }
 TB_FRONTMATTER = {
+    "status": None,
     "priority": None,
     "due": None,
+    "link": None,
     "archive": False,
 }
