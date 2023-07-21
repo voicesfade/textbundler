@@ -1,7 +1,7 @@
 import os
 import json
 import pathlib
-from config import TB_PATH, TB_DIR, TB_TYPES, TB_FRONTMATTER
+from config import TB_PATH, TB_DIR, TB_TYPES
 
 
 def get_type(tb_dir):
@@ -50,42 +50,6 @@ def get_tb_data(the_dir):
     return data
 
 
-# def get_bundle_data(tb_dir):
-#     with open(f"{tb_dir}/text.markdown", "r") as file:
-#         lines = file.readlines()
-#     tb_type = get_type(tb_dir)
-#     tb_id = get_id(tb_dir)
-#     title = lines[0].strip()
-#     data = {
-#         "title": title,
-#         "type": tb_type,
-#         "id": tb_id,
-#     }
-# yaml = False
-# for line in lines:
-#     if yaml == True:
-#         data = TB_FRONTMATTER
-#         data["title"] = title.strip()
-#         data["type"] = tb_type
-#         data["id"] = tb_id
-#         if ":" in line:
-#             f_type = line[0 : line.index(":")]
-#             if f_type in list(TB_FRONTMATTER.keys()):
-#                 v = line.replace(f"{f_type}: ", "").strip()
-#                 if v == "true":
-#                     TB_FRONTMATTER[f_type] = True
-#                 if v == "false":
-#                     TB_FRONTMATTER[f_type] = False
-#                 else:
-#                     TB_FRONTMATTER[f_type] = v
-#     if line.startswith("```yaml"):
-#         yaml = True
-#         continue
-#     if line.startswith("```") and yaml == True:
-#         return data
-# return data
-
-
 def create_index(the_data):
     content = "# Index\n"
     the_types = {}
@@ -119,7 +83,7 @@ def create_index(the_data):
     return "Success"
 
 
-def main():
+def index():
     the_path = pathlib.Path(f"{TB_PATH}/{TB_DIR}")
     the_data = []
     for the_dir in the_path.iterdir():
@@ -129,4 +93,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    index()

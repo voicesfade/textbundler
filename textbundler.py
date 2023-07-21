@@ -5,7 +5,7 @@ import uuid
 import json
 import datetime
 from config import BROWSER_NAME, TB_PATH, TB_DIR, TB_INFO, TB_TYPES
-import index
+from index import index
 
 
 def init():
@@ -85,6 +85,7 @@ def main():
     create_info(bundle_dir, timestamp, bundle_type)
     create_assets(bundle_dir)
     os.system(f"open -a '{BROWSER_NAME}' {TB_PATH}/{TB_DIR}/{bundle_dir}/text.markdown")
+    index()
     # os.system(f"/usr/local/bin/code {TB_PATH}/{TB_DIR}/{bundle_dir} -n")
     return "Success"
 
