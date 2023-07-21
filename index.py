@@ -102,15 +102,17 @@ def create_index(the_data):
         for bundle in type_value:
             bundle_id = bundle["id"]
             bundle_title = bundle["title"]
-            bundle_priority = "No Priority"
-            bundle_due = "No Due Date"
+            bundle_priority = str()
+            bundle_due = str()
             if "priority" in bundle:
                 if bundle["priority"] != "null":
-                    bundle_priority = bundle["priority"].title()
+                    bundle_priority = bundle["priority"]
+                    bundle_priority = f"**{bundle_priority.title()}** |"
             if "due" in bundle:
                 if bundle["due"] != "null":
                     bundle_due = bundle["due"].title()
-            content += f"* [{bundle_title}]({TB_PATH}/{TB_DIR}/{bundle_id}/text.markdown) | {bundle_priority} | {bundle_due} | [Edit](vscode://file{TB_PATH}/{TB_DIR}/{bundle_id}/?windowId=_blank)\n"
+                    bundle_due = f"**{bundle_due.title()}** |"
+            content += f"* [{bundle_title}]({TB_PATH}/{TB_DIR}/{bundle_id}/text.markdown) | {bundle_priority} {bundle_due} [Edit](vscode://file{TB_PATH}/{TB_DIR}/{bundle_id}/?windowId=_blank)\n"
     index_path = f"{TB_PATH}/{TB_DIR}"
     with open(f"{index_path}/index.markdown", "w") as f:
         f.write(content)
