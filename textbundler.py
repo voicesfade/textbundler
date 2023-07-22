@@ -84,7 +84,7 @@ def main():
     create_info(dir, timestamp)
     create_assets(dir)
     os.system(f"open -a '{BROWSER_NAME}' {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
-    # index()
+    index()
     # os.system(f"/usr/local/bin/code {TB_PATH}/{TB_DIR}/{dir} -n")
     return "Success"
 
