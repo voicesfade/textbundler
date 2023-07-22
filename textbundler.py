@@ -4,7 +4,7 @@ import os
 import uuid
 import json
 import datetime
-from config import BROWSER_NAME, TB_PATH, TB_DIR, TB_INFO, TB_TYPES
+from config import BROWSER_NAME, TB_PATH, TB_DIR, TB_INFO
 from index import index
 
 
@@ -15,20 +15,22 @@ def init():
 
 
 def create_dir():
-    bundle_name = uuid.uuid4().hex
-    bundle_path = os.path.join(TB_PATH, TB_DIR, bundle_name)
-    Path(bundle_path).mkdir(parents=True, exist_ok=True)
-    return bundle_name
+    name = uuid.uuid4().hex
+    path = os.path.join(TB_PATH, TB_DIR, name)
+    Path(path).mkdir(parents=True, exist_ok=True)
+    return name
 
 
-def create_text(bundle_dir, bundle_title, bundle_type):
-    bundle_path = f"{TB_PATH}/{TB_DIR}/{bundle_dir}"
-    with open(f"{bundle_path}/text.markdown", "w") as f:
-        note = f"""# {bundle_title}
+def create_text(dir, title, category):
+    path = f"{TB_PATH}/{TB_DIR}/{dir}"
+    with open(f"{path}/text.markdown", "w") as f:
+        note = f"""# {title}
 
-[{bundle_type.title()}s]({TB_PATH}/{TB_DIR}/index.markdown#{bundle_type}) | [Edit](vscode://file{bundle_path}/?windowId=_blank)
+[Index]({TB_PATH}/{TB_DIR}/index.markdown#{category}) | [Edit](vscode://file{path}/?windowId=_blank)
 
 ```yaml
+id: {dir}
+category: {category}
 status: null
 due: null
 priority: null
@@ -40,23 +42,21 @@ archive: false
     return "Success"
 
 
-def create_info(bundle_dir, timestamp, bundle_type):
-    info_data = TB_INFO
-    info_data["id"] = bundle_dir
-    info_data["type"] = bundle_type
-    info_data["path"] = f"{TB_DIR}/{bundle_dir}"
-    info_data["date_created"] = timestamp
-    info_data["date_updated"] = timestamp
-    bundle_path = f"{TB_PATH}/{TB_DIR}/{bundle_dir}"
-    with open(f"{bundle_path}/info.json", "w") as f:
-        note = json.dumps(info_data, indent=4)
+def create_info(dir, timestamp):
+    info = TB_INFO
+    info["id"] = dir
+    info["path"] = f"{TB_DIR}/{dir}"
+    info["date_created"] = timestamp
+    path = f"{TB_PATH}/{TB_DIR}/{dir}"
+    with open(f"{path}/info.json", "w") as f:
+        note = json.dumps(info, indent=4)
         f.write(note)
     return "Success"
 
 
-def create_assets(bundle_dir):
-    bundle_path = os.path.join(TB_PATH, TB_DIR, bundle_dir, "assets")
-    Path(bundle_path).mkdir(parents=True, exist_ok=True)
+def create_assets(dir):
+    path = os.path.join(TB_PATH, TB_DIR, dir, "assets")
+    Path(path).mkdir(parents=True, exist_ok=True)
     return "Success"
 
 
@@ -70,23 +70,22 @@ def main():
         type=str,
     )
     parser.add_argument(
-        "--type",
-        required=True,
-        choices=TB_TYPES,
-        help=f"Provide the type of note:{str(TB_TYPES)}",
+        "--category",
+        default="note",
+        help=f"Provide a category",
         type=str,
     )
     args = parser.parse_args()
-    bundle_title = args.title
-    bundle_type = args.type
+    title = args.title.strip()
+    category = args.category.strip()
     init()
-    bundle_dir = create_dir()
-    create_text(bundle_dir, bundle_title, bundle_type)
-    create_info(bundle_dir, timestamp, bundle_type)
-    create_assets(bundle_dir)
-    os.system(f"open -a '{BROWSER_NAME}' {TB_PATH}/{TB_DIR}/{bundle_dir}/text.markdown")
-    index()
-    # os.system(f"/usr/local/bin/code {TB_PATH}/{TB_DIR}/{bundle_dir} -n")
+    dir = create_dir()
+    create_text(dir, title, category)
+    create_info(dir, timestamp)
+    create_assets(dir)
+    os.system(f"open -a '{BROWSER_NAME}' {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
+    # index()
+    # os.system(f"/usr/local/bin/code {TB_PATH}/{TB_DIR}/{dir} -n")
     return "Success"
 
 

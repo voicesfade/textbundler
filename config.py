@@ -6,7 +6,6 @@ TB_PATH = os.path.expanduser("~")  # User's home directory
 #     "~/Library/Mobile%20Documents/com~apple~CloudDocs"
 # )  # User's iCloud directory
 TB_DIR = ".textbundles"
-TB_TYPES = ["task", "project", "meeting", "note"]
 TB_INFO = {
     "id": None,
     "type": None,
