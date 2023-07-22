@@ -33,7 +33,9 @@ def get_frontmatter(dir):
 
 
 def create_index(data):
-    content = "# Index\n"
+    content = f"""# Index
+[Open in VS Code](vscode://file{TB_PATH}/{TB_DIR}/?windowId=_blank)\n
+"""
     categories = {}
     for item in data:
         if "archive" in item:
