@@ -67,7 +67,7 @@ def due_data(due):
     if len(day) == 1:
         day = "0" + day
     if month in months and int(day) in days:
-        if today.strftime("%b").lower() == month and int(today.strftime("%d")) <= int(
+        if today.strftime("%b").lower() == month and int(today.strftime("%d")) >= int(
             day
         ):
             return f'<span style="color:red">{due.title()}</span>'
@@ -86,9 +86,6 @@ def create_index(data):
         if "archive" in item:
             if item["archive"] == False:
                 if "category" in item:
-                    # if "due" in item:
-                    #     if item["due"] != None:
-                    #         item["due"] = due_data(item["due"])
                     if item["category"] not in categories:
                         categories[item["category"]] = []
                     categories[item["category"]].append(item)
@@ -97,18 +94,13 @@ def create_index(data):
         for tb in cat_val:
             tb_id = tb["id"]
             tb_title = tb["title"]
-            tb_priority = str()
-            tb_due = str()
             links = [f"* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)"]
             if "priority" in tb:
                 if tb["priority"] != None:
-                    tb_priority = tb["priority"]
-                    if tb_priority:
-                        links.append(priority_color(tb_priority))
+                    links.append(priority_color(tb["priority"]))
             if "due" in tb:
                 if tb["due"] != None:
-                    tb_due = tb["due"].title()
-                    links.append(due_data(item["due"]))
+                    links.append(due_data(tb["due"]))
             links.append(
                 f"[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)\n"
             )
