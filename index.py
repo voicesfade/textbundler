@@ -90,7 +90,7 @@ def create_index(data):
                         categories[item["category"]] = []
                     categories[item["category"]].append(item)
     for cat_key, cat_val in categories.items():
-        content += f"\n## {cat_key.title()}s\n\n"
+        content += f"\n## {cat_key.title()}\n\n"
         for tb in cat_val:
             tb_id = tb["id"]
             tb_title = tb["title"]
