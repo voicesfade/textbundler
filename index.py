@@ -1,7 +1,7 @@
 import os
 import pathlib
 from config import TB_PATH, TB_DIR
-import json
+import datetime
 
 
 def get_frontmatter(dir):
@@ -32,6 +32,51 @@ def get_frontmatter(dir):
     return data
 
 
+def priority_color(priority):
+    priority = priority.lower()
+    if priority == "high":
+        return f'<span style="color:red">{priority.title()}</span>'
+    elif priority == "medium":
+        return f'<span style="color:orange">{priority.title()}</span>'
+    elif priority == "low":
+        return f'<span style="color:purple">{priority.title()}</span>'
+    else:
+        return f"{priority.title()}"
+
+
+def due_data(due):
+    today = datetime.datetime.now()
+    months = [
+        "jan",
+        "feb",
+        "mar",
+        "apr",
+        "may",
+        "jun",
+        "jul",
+        "aug",
+        "sep",
+        "oct",
+        "nov",
+        "dec",
+    ]
+    days = list(range(1, 32))
+    due = due.lower()
+    month = due[0:3]
+    day = due[4:7]
+    if len(day) == 1:
+        day = "0" + day
+    if month in months and int(day) in days:
+        if today.strftime("%b").lower() == month and int(today.strftime("%d")) <= int(
+            day
+        ):
+            return f'<span style="color:red">{due.title()}</span>'
+        else:
+            return f'<span style="color:green">{due.title()}</span>'
+    else:
+        return due
+
+
 def create_index(data):
     content = f"""# Index
 [Open in VS Code](vscode://file{TB_PATH}/{TB_DIR}/?windowId=_blank)\n
@@ -41,6 +86,9 @@ def create_index(data):
         if "archive" in item:
             if item["archive"] == False:
                 if "category" in item:
+                    # if "due" in item:
+                    #     if item["due"] != None:
+                    #         item["due"] = due_data(item["due"])
                     if item["category"] not in categories:
                         categories[item["category"]] = []
                     categories[item["category"]].append(item)
@@ -51,15 +99,20 @@ def create_index(data):
             tb_title = tb["title"]
             tb_priority = str()
             tb_due = str()
+            links = [f"* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)"]
             if "priority" in tb:
                 if tb["priority"] != None:
                     tb_priority = tb["priority"]
-                    tb_priority = f"**{tb_priority.title()}** |"
+                    if tb_priority:
+                        links.append(priority_color(tb_priority))
             if "due" in tb:
                 if tb["due"] != None:
                     tb_due = tb["due"].title()
-                    tb_due = f"**{tb_due.title()}** |"
-            content += f"* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown) | {tb_priority} {tb_due} [Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)\n"
+                    links.append(due_data(item["due"]))
+            links.append(
+                f"[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)\n"
+            )
+            content += " | ".join(links)
     index_path = f"{TB_PATH}/{TB_DIR}"
     with open(f"{index_path}/index.markdown", "w") as f:
         f.write(content)
