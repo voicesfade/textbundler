@@ -40,6 +40,8 @@ def priority_color(priority):
         return f'<span style="color:orange">{priority.title()}</span>'
     elif priority == "low":
         return f'<span style="color:purple">{priority.title()}</span>'
+    elif priority == "new":
+        return f"✨ **{priority.title()}** ✨"
     else:
         return f"{priority.title()}"
 

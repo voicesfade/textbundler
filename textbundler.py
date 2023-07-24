@@ -4,7 +4,7 @@ import os
 import uuid
 import json
 import datetime
-from config import BROWSER_NAME, TB_PATH, TB_DIR, TB_INFO
+from config import TB_PATH, TB_DIR, TB_INFO
 from index import index
 
 
@@ -23,6 +23,9 @@ def create_dir():
 
 def create_text(dir, title, category):
     path = f"{TB_PATH}/{TB_DIR}/{dir}"
+    today = datetime.datetime.now()
+    month = today.strftime("%b").lower()
+    day = today.strftime("%d")
     with open(f"{path}/text.markdown", "w") as f:
         note = f"""# {title}
 
@@ -31,9 +34,9 @@ def create_text(dir, title, category):
 ```yaml
 id: {dir}
 category: {category}
-status: null
-due: null
-priority: null
+status: open
+due: {month} {day}
+priority: new
 jira: null
 archive: false
 ```
@@ -83,7 +86,8 @@ def main():
     create_text(dir, title, category)
     create_info(dir, timestamp)
     create_assets(dir)
-    os.system(f"open -a '{BROWSER_NAME}' {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
+    os.system(f"/usr/local/bin/code -n {TB_PATH}/{TB_DIR}/text.markdown")
+    # os.system(f"open -a '{BROWSER_NAME}' {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
     index()
     # os.system(f"/usr/local/bin/code {TB_PATH}/{TB_DIR}/{dir} -n")
     return "Success"
