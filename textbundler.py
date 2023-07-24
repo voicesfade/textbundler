@@ -86,7 +86,7 @@ def main():
     create_text(dir, title, category)
     create_info(dir, timestamp)
     create_assets(dir)
-    os.system(f"/usr/local/bin/code -n {TB_PATH}/{TB_DIR}/text.markdown")
+    os.system(f"/usr/local/bin/code -n {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
     # os.system(f"open -a '{BROWSER_NAME}' {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
     index()
     # os.system(f"/usr/local/bin/code {TB_PATH}/{TB_DIR}/{dir} -n")
