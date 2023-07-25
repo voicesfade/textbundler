@@ -1,6 +1,6 @@
 import os
 import pathlib
-from config import TB_PATH, TB_DIR
+from config import TB_PATH, TB_DIR, TB_CATEGORIES
 import datetime
 
 
@@ -82,6 +82,8 @@ def due_data(due):
 def create_index(data):
     content = f"# Index\n\n[Edit](vscode://file{TB_PATH}/{TB_DIR}/?windowId=_blank)"
     categories = {}
+    for category in TB_CATEGORIES:
+        categories[category] = []
     for item in data:
         if "archive" in item:
             if item["archive"] == False:
