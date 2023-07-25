@@ -35,13 +35,13 @@ def get_frontmatter(dir):
 def priority_color(priority):
     priority = priority.lower()
     if priority == "high":
-        return f'<span style="color:red">{priority.title()}</span>'
+        return f'**<span style="color:orangered">{priority.title()}</span>**'
     elif priority == "medium":
-        return f'<span style="color:orange">{priority.title()}</span>'
+        return f'**<span style="color:sandybrown">{priority.title()}</span>**'
     elif priority == "low":
-        return f'<span style="color:purple">{priority.title()}</span>'
+        return f'**<span style="color:plum">{priority.title()}</span>**'
     elif priority == "new":
-        return f"✨ **{priority.title()}** ✨"
+        return f'**<span style="color:mediumpurple">{priority.title()} ✨</span>**'
     else:
         return f"{priority.title()}"
 
@@ -72,17 +72,15 @@ def due_data(due):
         if today.strftime("%b").lower() == month and int(today.strftime("%d")) >= int(
             day
         ):
-            return f'<span style="color:red">{due.title()}</span>'
+            return f'**<span style="color:orangered">{due.title()}</span>**'
         else:
-            return f'<span style="color:green">{due.title()}</span>'
+            return f'**<span style="color:mediumseagreen">{due.title()}</span>**'
     else:
         return due
 
 
 def create_index(data):
-    content = f"""# Index
-[Open in VS Code](vscode://file{TB_PATH}/{TB_DIR}/?windowId=_blank)\n
-"""
+    content = f"# Index\n\n[Edit](vscode://file{TB_PATH}/{TB_DIR}/?windowId=_blank)"
     categories = {}
     for item in data:
         if "archive" in item:
@@ -92,20 +90,20 @@ def create_index(data):
                         categories[item["category"]] = []
                     categories[item["category"]].append(item)
     for cat_key, cat_val in categories.items():
-        content += f"\n## {cat_key.title()}\n\n"
+        content += f"\n\n## {cat_key.title()}\n"
         for tb in cat_val:
             tb_id = tb["id"]
             tb_title = tb["title"]
-            links = [f"* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)"]
+            links = [f"\n* **[{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)**"]
+            links.append(
+                f"**[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)**"
+            )
             if "priority" in tb:
                 if tb["priority"] != None:
-                    links.append(priority_color(tb["priority"]))
+                    links.append(f'{priority_color(tb["priority"])}')
             if "due" in tb:
                 if tb["due"] != None:
-                    links.append(due_data(tb["due"]))
-            links.append(
-                f"[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)\n"
-            )
+                    links.append(f'{due_data(tb["due"])}')
             content += " | ".join(links)
     index_path = f"{TB_PATH}/{TB_DIR}"
     with open(f"{index_path}/index.markdown", "w") as f:

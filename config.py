@@ -13,3 +13,9 @@ TB_INFO = {
     "date_created": None,
     "date_updated": None,
 }
+TB_CATEGORIES = [
+    "task",
+    "meeting",
+    "project",
+    "note",
+]

@@ -35,7 +35,7 @@ def create_text(dir, title, category):
 id: {dir}
 category: {category}
 status: open
-due: {month} {day}
+due: null
 priority: new
 jira: null
 archive: false
