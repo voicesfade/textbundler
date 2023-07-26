@@ -46,6 +46,13 @@ def priority_color(priority):
         return f"{priority.title()}"
 
 
+def is_archived(data):
+    if "archive" in data:
+        if data["archive"] == True:
+            return True
+    return False
+
+
 def get_date():
     today = datetime.datetime.now()
     month = today.strftime("%b").lower()
@@ -118,31 +125,41 @@ def format_bullet(bullet):
 def due(data):
     bullets = []
     for item in data:
-        if "due" in item:
-            if item["due"] != None:
-                if due_date(item["due"]) == True:
-                    bullets.append(format_bullet(item))
+        if is_archived(item) == False:
+            if "due" in item:
+                if item["due"] != None:
+                    if due_date(item["due"]) == True:
+                        bullets.append(format_bullet(item))
     return "\n".join(bullets)
 
 
 def high_priority(data):
     bullets = []
     for item in data:
-        if "priority" in item:
-            if item["priority"] == "high":
-                bullets.append(format_bullet(item))
+        if is_archived(item) == False:
+            if "priority" in item:
+                if item["priority"] == "high":
+                    bullets.append(format_bullet(item))
     return "\n".join(bullets)
 
 
 def category(data, category):
     bullets = []
     for item in data:
-        if "category" in item:
-            if item["category"] in TB_CATEGORIES:
+        if is_archived(item) == False:
+            if "category" in item:
                 if item["category"] == category:
                     bullets.append(format_bullet(item))
-            else:
-                bullets.append(format_bullet(item))
+    return "\n".join(bullets)
+
+
+def other(data):
+    bullets = []
+    for item in data:
+        if is_archived(item) == False:
+            if "category" in item:
+                if item["category"] not in TB_CATEGORIES:
+                    bullets.append(format_bullet(item))
     return "\n".join(bullets)
 
 
@@ -170,7 +187,7 @@ def create_index(data):
 {category(data, "note")}
 
 ## Other
-{category(data, None)}
+{other(data)}
 
 """
     index_path = f"{TB_PATH}/{TB_DIR}"
