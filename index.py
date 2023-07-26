@@ -35,19 +35,33 @@ def get_frontmatter(dir):
 def priority_color(priority):
     priority = priority.lower()
     if priority == "high":
-        return f'**<span style="color:orangered">{priority.title()}</span>**'
+        return f'<span style="color:orangered">{priority.title()}</span>'
     elif priority == "medium":
-        return f'**<span style="color:sandybrown">{priority.title()}</span>**'
+        return f'<span style="color:sandybrown">{priority.title()}</span>'
     elif priority == "low":
-        return f'**<span style="color:plum">{priority.title()}</span>**'
+        return f'<span style="color:plum">{priority.title()}</span>'
     elif priority == "new":
-        return f'**<span style="color:mediumpurple">{priority.title()} ✨</span>**'
+        return f'<span style="color:mediumpurple">{priority.title()}✨</span>'
     else:
         return f"{priority.title()}"
 
 
-def due_data(due):
+def get_date():
     today = datetime.datetime.now()
+    month = today.strftime("%b").lower()
+    day = today.strftime("%d")
+    return f"{month} {day}"
+
+
+def due_date(due):
+    t = datetime.datetime.now()
+    t_month = t.strftime("%b").lower()
+    t_day = int(t.strftime("%d"))
+    try:
+        month = due[0:3]
+        day = int(due[4:7])
+    except:
+        return False
     months = [
         "jan",
         "feb",
@@ -62,55 +76,106 @@ def due_data(due):
         "nov",
         "dec",
     ]
+    if month not in months:
+        return False
     days = list(range(1, 32))
-    due = due.lower()
-    month = due[0:3]
-    day = due[4:7]
-    if len(day) == 1:
-        day = "0" + day
-    if month in months and int(day) in days:
-        if today.strftime("%b").lower() == month and int(today.strftime("%d")) >= int(
-            day
-        ):
-            return f'**<span style="color:orangered">{due.title()}</span>**'
+    if day not in days:
+        return False
+    if month == t_month:
+        if t_day >= day:
+            return True
         else:
-            return f'**<span style="color:mediumseagreen">{due.title()}</span>**'
+            return False
+    elif months.index(month) < months.index(t_month):
+        return True
     else:
-        return due
+        return False
+
+
+def format_bullet(bullet):
+    tb_title = bullet["title"]
+    tb_id = bullet["id"]
+    line = []
+    line.append(f"\n* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)")
+    line.append(f"[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)")
+    if "priority" in bullet:
+        if bullet["priority"] != None:
+            line.append(f'{priority_color(bullet["priority"])}')
+        if "due" in bullet:
+            if bullet["due"] != None:
+                tb_due = bullet["due"]
+                if due_date(bullet["due"]):
+                    line.append(
+                        f'<span style="color:orangered">{tb_due.title()}</span>'
+                    )
+                else:
+                    line.append(
+                        f'<span style="color:mediumseagreen">{tb_due.title()}</span>'
+                    )
+    return " | ".join(line)
+
+
+def due(data):
+    bullets = []
+    for item in data:
+        if "due" in item:
+            if item["due"] != None:
+                if due_date(item["due"]) == True:
+                    bullets.append(format_bullet(item))
+    return "\n".join(bullets)
+
+
+def high_priority(data):
+    bullets = []
+    for item in data:
+        if "priority" in item:
+            if item["priority"] == "high":
+                bullets.append(format_bullet(item))
+    return "\n".join(bullets)
+
+
+def category(data, category):
+    bullets = []
+    for item in data:
+        if "category" in item:
+            if item["category"] in TB_CATEGORIES:
+                if item["category"] == category:
+                    bullets.append(format_bullet(item))
+            else:
+                bullets.append(format_bullet(item))
+    return "\n".join(bullets)
 
 
 def create_index(data):
-    content = f"# Index\n\n[Edit](vscode://file{TB_PATH}/{TB_DIR}/?windowId=_blank)"
-    categories = {}
-    for category in TB_CATEGORIES:
-        categories[category] = []
-    for item in data:
-        if "archive" in item:
-            if item["archive"] == False:
-                if "category" in item:
-                    if item["category"] not in categories:
-                        categories[item["category"]] = []
-                    categories[item["category"]].append(item)
-    for cat_key, cat_val in categories.items():
-        content += f"\n\n## {cat_key.title()}\n"
-        for tb in cat_val:
-            tb_id = tb["id"]
-            tb_title = tb["title"]
-            links = [f"\n* **[{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)**"]
-            links.append(
-                f"**[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)**"
-            )
-            if "priority" in tb:
-                if tb["priority"] != None:
-                    links.append(f'{priority_color(tb["priority"])}')
-            if "due" in tb:
-                if tb["due"] != None:
-                    links.append(f'{due_data(tb["due"])}')
-            content += " | ".join(links)
+    page = f"""# Index
+
+[Edit](vscode://file{TB_PATH}/{TB_DIR}/?windowId=_blank)
+
+## Due/Overdue
+{due(data)}
+
+## High Priority
+{high_priority(data)}
+
+## Tasks
+{category(data, "task")}
+
+## Meetings
+{category(data, "meeting")}
+
+## Projects
+{category(data, "project")}
+
+## Notes
+{category(data, "note")}
+
+## Other
+{category(data, None)}
+
+"""
     index_path = f"{TB_PATH}/{TB_DIR}"
     with open(f"{index_path}/index.markdown", "w") as f:
-        f.write(content)
-    return "Success"
+        f.write(page)
 
 
 def index():
