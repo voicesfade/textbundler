@@ -99,26 +99,33 @@ def due_date(due):
         return False
 
 
-def format_bullet(bullet):
+def format_bullet(bullet, archive=False):
     tb_title = bullet["title"]
     tb_id = bullet["id"]
-    line = []
+    line = list()
     line.append(f"\n* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)")
     line.append(f"[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)")
-    if "priority" in bullet:
-        if bullet["priority"] != None:
-            line.append(f'{priority_color(bullet["priority"])}')
-        if "due" in bullet:
-            if bullet["due"] != None:
-                tb_due = bullet["due"]
-                if due_date(bullet["due"]):
-                    line.append(
-                        f'<span style="color:orangered">{tb_due.title()}</span>'
-                    )
-                else:
-                    line.append(
-                        f'<span style="color:mediumseagreen">{tb_due.title()}</span>'
-                    )
+    if archive == False:
+        if "priority" in bullet:
+            if bullet["priority"] != None:
+                line.append(f'{priority_color(bullet["priority"])}')
+            if "due" in bullet:
+                if bullet["due"] != None:
+                    tb_due = bullet["due"]
+                    if due_date(bullet["due"]):
+                        line.append(
+                            f'<span style="color:orangered">{tb_due.title()}</span>'
+                        )
+                    else:
+                        line.append(
+                            f'<span style="color:mediumseagreen">{tb_due.title()}</span>'
+                        )
+    else:
+        if "category" in bullet:
+            tb_category = bullet["category"]
+            line.append(
+                f'<span style="color:LightSlateGrey">{tb_category.title()}</span>'
+            )
     return " | ".join(line)
 
 
@@ -129,7 +136,7 @@ def due(data):
             if "due" in item:
                 if item["due"] != None:
                     if due_date(item["due"]) == True:
-                        bullets.append(format_bullet(item))
+                        bullets.append(format_bullet(item, archive=False))
     return "\n".join(bullets)
 
 
@@ -139,7 +146,7 @@ def high_priority(data):
         if is_archived(item) == False:
             if "priority" in item:
                 if item["priority"] == "high":
-                    bullets.append(format_bullet(item))
+                    bullets.append(format_bullet(item, archive=False))
     return "\n".join(bullets)
 
 
@@ -149,7 +156,7 @@ def new(data):
         if is_archived(item) == False:
             if "priority" in item:
                 if item["priority"] == "new":
-                    bullets.append(format_bullet(item))
+                    bullets.append(format_bullet(item, archive=False))
     return "\n".join(bullets)
 
 
@@ -159,7 +166,7 @@ def category(data, category):
         if is_archived(item) == False:
             if "category" in item:
                 if item["category"] == category:
-                    bullets.append(format_bullet(item))
+                    bullets.append(format_bullet(item, archive=False))
     return "\n".join(bullets)
 
 
@@ -169,7 +176,15 @@ def other(data):
         if is_archived(item) == False:
             if "category" in item:
                 if item["category"] not in TB_CATEGORIES:
-                    bullets.append(format_bullet(item))
+                    bullets.append(format_bullet(item, archive=False))
+    return "\n".join(bullets)
+
+
+def archive(data):
+    bullets = []
+    for item in data:
+        if is_archived(item) == True:
+            bullets.append(format_bullet(item, archive=True))
     return "\n".join(bullets)
 
 
@@ -184,7 +199,7 @@ def create_index(data):
 ## High Priority
 {high_priority(data)}
 
-## New
+## New✨
 {new(data)}
 
 ## Tasks
@@ -201,6 +216,9 @@ def create_index(data):
 
 ## Other
 {other(data)}
+
+## Archive
+{archive(data)}
 
 """
     index_path = f"{TB_PATH}/{TB_DIR}"
