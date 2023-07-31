@@ -143,6 +143,16 @@ def high_priority(data):
     return "\n".join(bullets)
 
 
+def new(data):
+    bullets = []
+    for item in data:
+        if is_archived(item) == False:
+            if "priority" in item:
+                if item["priority"] == "new":
+                    bullets.append(format_bullet(item))
+    return "\n".join(bullets)
+
+
 def category(data, category):
     bullets = []
     for item in data:
@@ -173,6 +183,9 @@ def create_index(data):
 
 ## High Priority
 {high_priority(data)}
+
+## New
+{new(data)}
 
 ## Tasks
 {category(data, "task")}
