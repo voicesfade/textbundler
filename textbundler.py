@@ -80,14 +80,17 @@ Status:
     while len(priority) == 0:
         print(
             """
-Priorities: 
+Priorities:
+(n) New
 (h) High
 (m) Medium
 (l) Low
     """
         )
         response = input("Priority: ")
-        if response == "h":
+        if response == "n":
+            priority = "new"
+        elif response == "h":
             priority = "high"
         elif response == "m":
             priority = "medium"
