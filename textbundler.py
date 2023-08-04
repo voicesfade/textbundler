@@ -15,8 +15,14 @@ def init():
 
 
 def user_input():
+    today = datetime.datetime.now()
+    month = today.strftime("%b").lower()
+    day = today.strftime("%d")
     title = str()
     category = str()
+    status = str()
+    due = str()
+    priority = str()
 
     while len(title) == 0:
         title = input("\nTitle: ").strip()
@@ -25,22 +31,78 @@ def user_input():
         print(
             """
 Categories: 
-(1) Task
-(2) Meeting
-(3) Project
-(4) Note
+(t) Task
+(m) Meeting
+(p) Project
+(n) Note
     """
         )
         response = input("Category: ")
-        if response == "1":
+        if response == "t":
             category = "task"
-        elif response == "2":
+        elif response == "m":
             category = "meeting"
-        elif response == "3":
+        elif response == "p":
             category = "project"
-        elif response == "4":
+        elif response == "n":
             category = "note"
-    return (title, category)
+
+    while len(status) == 0:
+        print(
+            """
+Status: 
+(o) Open
+(p) In Progress
+(r) In Review
+(b) Blocked
+(c) Closed
+    """
+        )
+        response = input("Status: ")
+        if response == "o":
+            status = "open"
+        elif response == "p":
+            status = "in progress"
+        elif response == "r":
+            status = "in review"
+        elif response == "b":
+            status = "blocked"
+        elif response == "c":
+            status = "closed"
+
+    while due == str():
+        response = input("\nDue today (y/n): ")
+        if response == "y":
+            due = f"{month} {day}"
+        elif response == "n":
+            due = None
+
+    while len(priority) == 0:
+        print(
+            """
+Priorities: 
+(h) High
+(m) Medium
+(l) Low
+    """
+        )
+        response = input("Priority: ")
+        if response == "h":
+            priority = "high"
+        elif response == "m":
+            priority = "medium"
+        elif response == "l":
+            priority = "low"
+
+    data = {
+        "title": title,
+        "category": category,
+        "status": status,
+        "due": due,
+        "priority": priority,
+    }
+
+    return data
 
 
 def create_dir():
@@ -50,11 +112,14 @@ def create_dir():
     return name
 
 
-def create_text(dir, title, category):
+def create_text(dir, data):
     path = f"{TB_PATH}/{TB_DIR}/{dir}"
-    today = datetime.datetime.now()
-    month = today.strftime("%b").lower()
-    day = today.strftime("%d")
+    title = data["title"]
+    category = data["category"]
+    status = data["status"]
+    due = data["due"]
+    priority = data["priority"]
+
     with open(f"{path}/text.markdown", "w") as f:
         note = f"""# {title}
 
@@ -63,9 +128,9 @@ def create_text(dir, title, category):
 ```yaml
 id: {dir}
 category: {category}
-status: open
-due: null
-priority: new
+status: {status}
+due: {due}
+priority: {priority}
 jira: null
 archive: false
 ```
@@ -110,16 +175,20 @@ def main():
     args = parser.parse_args()
     title = args.title
     category = args.category
-    if title == None and category == None:
-        tc = user_input()
-        title = tc[0]
-        category = tc[1]
-    else:
-        title = title.strip()
-        category = category.strip()
     init()
     dir = create_dir()
-    create_text(dir, title, category)
+    if title == None and category == None:
+        data = user_input()
+        create_text(dir, data)
+    else:
+        data = {
+            "title": title.strip(),
+            "category": category.strip(),
+            "status": "open",
+            "due": None,
+            "priority": None,
+        }
+        create_text(dir, data)
     create_info(dir, timestamp)
     create_assets(dir)
     os.system(f"/usr/local/bin/code -n {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
