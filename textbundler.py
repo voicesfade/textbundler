@@ -24,11 +24,11 @@ def user_input():
     while len(category) == 0:
         print(
             """
-    Categories: 
-    (1) Task
-    (2) Meeting
-    (3) Project
-    (4) Note
+Categories: 
+(1) Task
+(2) Meeting
+(3) Project
+(4) Note
     """
         )
         response = input("Category: ")
