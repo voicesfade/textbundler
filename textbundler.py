@@ -14,6 +14,35 @@ def init():
     return "Success"
 
 
+def user_input():
+    title = str()
+    category = str()
+
+    while len(title) == 0:
+        title = input("\nTitle: ").strip()
+
+    while len(category) == 0:
+        print(
+            """
+    Categories: 
+    (1) Task
+    (2) Meeting
+    (3) Project
+    (4) Note
+    """
+        )
+        response = input("Category: ")
+        if response == "1":
+            category = "task"
+        elif response == "2":
+            category = "meeting"
+        elif response == "3":
+            category = "project"
+        elif response == "4":
+            category = "note"
+    return (title, category)
+
+
 def create_dir():
     name = uuid.uuid4().hex
     path = os.path.join(TB_PATH, TB_DIR, name)
@@ -68,19 +97,26 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--title",
-        default=f"{timestamp}",
+        default=None,
         help="Provide a title.",
         type=str,
     )
     parser.add_argument(
         "--category",
-        default="note",
+        default=None,
         help=f"Provide a category",
         type=str,
     )
     args = parser.parse_args()
-    title = args.title.strip()
-    category = args.category.strip()
+    title = args.title
+    category = args.category
+    if title == None and category == None:
+        tc = user_input()
+        title = tc[0]
+        category = tc[1]
+    else:
+        title = title.strip()
+        category = category.strip()
     init()
     dir = create_dir()
     create_text(dir, title, category)
