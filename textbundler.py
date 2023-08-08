@@ -6,6 +6,7 @@ import json
 import datetime
 from config import TB_PATH, TB_DIR, TB_INFO
 from index import index
+import sys
 
 
 def init():
@@ -23,79 +24,81 @@ def user_input():
     status = str()
     due = str()
     priority = str()
+    try:
+        while len(title) == 0:
+            title = input("\nTitle: ").strip()
 
-    while len(title) == 0:
-        title = input("\nTitle: ").strip()
-
-    while len(category) == 0:
-        print(
-            """
+        while len(category) == 0:
+            print(
+                """
 Categories: 
 (t) Task
 (m) Meeting
 (p) Project
 (n) Note
-    """
-        )
-        response = input("Category: ")
-        if response == "t":
-            category = "task"
-        elif response == "m":
-            category = "meeting"
-        elif response == "p":
-            category = "project"
-        elif response == "n":
-            category = "note"
+        """
+            )
+            response = input("Category: ")
+            if response == "t":
+                category = "task"
+            elif response == "m":
+                category = "meeting"
+            elif response == "p":
+                category = "project"
+            elif response == "n":
+                category = "note"
 
-    while len(status) == 0:
-        print(
-            """
+        while len(status) == 0:
+            print(
+                """
 Status: 
 (o) Open
 (p) In Progress
 (r) In Review
 (b) Blocked
 (c) Closed
-    """
-        )
-        response = input("Status: ")
-        if response == "o":
-            status = "open"
-        elif response == "p":
-            status = "in progress"
-        elif response == "r":
-            status = "in review"
-        elif response == "b":
-            status = "blocked"
-        elif response == "c":
-            status = "closed"
+        """
+            )
+            response = input("Status: ")
+            if response == "o":
+                status = "open"
+            elif response == "p":
+                status = "in progress"
+            elif response == "r":
+                status = "in review"
+            elif response == "b":
+                status = "blocked"
+            elif response == "c":
+                status = "closed"
 
-    while due == str():
-        response = input("\nDue today (y/n): ")
-        if response == "y":
-            due = f"{month} {day}"
-        elif response == "n":
-            due = None
+        while due == str():
+            response = input("\nDue today (y/n): ")
+            if response == "y":
+                due = f"{month} {day}"
+            elif response == "n":
+                due = None
 
-    while len(priority) == 0:
-        print(
-            """
+        while len(priority) == 0:
+            print(
+                """
 Priorities:
 (n) New
 (h) High
 (m) Medium
 (l) Low
     """
-        )
-        response = input("Priority: ")
-        if response == "n":
-            priority = "new"
-        elif response == "h":
-            priority = "high"
-        elif response == "m":
-            priority = "medium"
-        elif response == "l":
-            priority = "low"
+            )
+            response = input("Priority: ")
+            if response == "n":
+                priority = "new"
+            elif response == "h":
+                priority = "high"
+            elif response == "m":
+                priority = "medium"
+            elif response == "l":
+                priority = "low"
+    except:
+        sys.exit(print("\n\nExiting..."))
 
     data = {
         "title": title,
