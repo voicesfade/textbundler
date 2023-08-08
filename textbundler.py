@@ -182,10 +182,8 @@ def main():
     title = args.title
     category = args.category
     init()
-    dir = create_dir()
     if title == None and category == None:
         data = user_input()
-        create_text(dir, data)
     else:
         data = {
             "title": title.strip(),
@@ -194,7 +192,8 @@ def main():
             "due": None,
             "priority": None,
         }
-        create_text(dir, data)
+    dir = create_dir()
+    create_text(dir, data)
     create_info(dir, timestamp)
     create_assets(dir)
     os.system(f"/usr/local/bin/code -n {TB_PATH}/{TB_DIR}/{dir}/text.markdown")
