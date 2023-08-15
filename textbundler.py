@@ -76,7 +76,7 @@ Status:
             if response == "y":
                 due = f"{month} {day}"
             elif response == "n":
-                due = None
+                due = "null"
 
         while len(priority) == 0:
             print(
@@ -148,7 +148,6 @@ archive: false
 def create_info(dir, timestamp):
     info = TB_INFO
     info["id"] = dir
-    info["path"] = f"{TB_DIR}/{dir}"
     info["date_created"] = timestamp
     path = f"{TB_PATH}/{TB_DIR}/{dir}"
     with open(f"{path}/info.json", "w") as f:
@@ -189,8 +188,8 @@ def main():
             "title": title.strip(),
             "category": category.strip(),
             "status": "open",
-            "due": None,
-            "priority": None,
+            "due": "null",
+            "priority": "null",
         }
     dir = create_dir()
     create_text(dir, data)

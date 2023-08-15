@@ -8,10 +8,7 @@ TB_PATH = os.path.expanduser("~")  # User's home directory
 TB_DIR = ".textbundles"
 TB_INFO = {
     "id": None,
-    "type": None,
-    "path": None,
     "date_created": None,
-    "date_updated": None,
 }
 TB_CATEGORIES = [
     "task",
