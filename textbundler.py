@@ -32,7 +32,6 @@ def user_input():
         while len(category) == 0:
             print(
                 """
-Categories: 
 (t) Task
 (m) Meeting
 (p) Project
@@ -46,14 +45,13 @@ Categories:
                 category = "meeting"
             elif response == "p":
                 category = "project"
-            elif response == "n":
+            elif response == "n" or response == "":
                 category = "note"
         os.system("clear")
 
         while len(status) == 0:
             print(
                 """
-Status: 
 (o) Open
 (p) In Progress
 (r) In Review
@@ -62,6 +60,7 @@ Status:
         """
             )
             response = input("Status: ")
+            print(response)
             if response == "o":
                 status = "open"
             elif response == "p":
@@ -72,20 +71,21 @@ Status:
                 status = "blocked"
             elif response == "c":
                 status = "closed"
+            elif response == "":
+                status = "null"
         os.system("clear")
 
         while due == str():
             response = input("\nDue today (y/n): ")
             if response == "y":
                 due = f"{month} {day}"
-            elif response == "n":
+            elif response == "n" or response == "":
                 due = "null"
         os.system("clear")
 
         while len(priority) == 0:
             print(
                 """
-Priorities:
 (n) New
 (h) High
 (m) Medium
@@ -93,7 +93,7 @@ Priorities:
     """
             )
             response = input("Priority: ")
-            if response == "n":
+            if response == "n" or response == "":
                 priority = "new"
             elif response == "h":
                 priority = "high"

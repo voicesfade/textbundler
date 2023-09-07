@@ -10,25 +10,31 @@ def get_frontmatter(dir):
         lines = file.readlines()
     data["title"] = lines[0].replace("# ", "").strip()
     yaml = False
+    yaml_done = False
+    todos = 0
     for line in lines:
-        if yaml == True:
-            if ":" in line:
-                yaml_key = line[0 : line.index(":")]
-                yaml_value = line.replace(f"{yaml_key}: ", "").strip()
-                data[yaml_key] = str()
-                if yaml_value == "null":
-                    data[yaml_key] = None
-                elif yaml_value == "true":
-                    data[yaml_key] = True
-                elif yaml_value == "false":
-                    data[yaml_key] = False
-                else:
-                    data[yaml_key] = yaml_value.strip()
-        if line.startswith("```yaml"):
-            yaml = True
-            continue
-        if line.startswith("```") and yaml == True:
-            return data
+        if "- [ ]" in line:
+            todos += 1
+        if yaml_done == False:
+            if yaml == True:
+                if ":" in line:
+                    yaml_key = line[0 : line.index(":")]
+                    yaml_value = line.replace(f"{yaml_key}: ", "").strip()
+                    data[yaml_key] = str()
+                    if yaml_value == "null":
+                        data[yaml_key] = None
+                    elif yaml_value == "true":
+                        data[yaml_key] = True
+                    elif yaml_value == "false":
+                        data[yaml_key] = False
+                    else:
+                        data[yaml_key] = yaml_value.strip()
+            if line.startswith("```yaml"):
+                yaml = True
+                continue
+            if line.startswith("```") and yaml == True:
+                yaml_done = True
+    data["todos"] = todos
     return data
 
 
@@ -102,8 +108,14 @@ def due_date(due):
 def format_bullet(bullet, archive=False):
     tb_title = bullet["title"]
     tb_id = bullet["id"]
+    tb_todos = bullet["todos"]
     line = list()
-    line.append(f"\n* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)")
+    if tb_todos > 0:
+        line.append(
+            f"\n* `{str(tb_todos)}` [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)"
+        )
+    else:
+        line.append(f"\n* [{tb_title}]({TB_PATH}/{TB_DIR}/{tb_id}/text.markdown)")
     line.append(f"[Edit](vscode://file{TB_PATH}/{TB_DIR}/{tb_id}/?windowId=_blank)")
     if archive == False:
         if "priority" in bullet:
