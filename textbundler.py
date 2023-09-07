@@ -27,6 +27,7 @@ def user_input():
     try:
         while len(title) == 0:
             title = input("\nTitle: ").strip()
+            os.system("clear")
 
         while len(category) == 0:
             print(
@@ -47,6 +48,7 @@ Categories:
                 category = "project"
             elif response == "n":
                 category = "note"
+        os.system("clear")
 
         while len(status) == 0:
             print(
@@ -70,6 +72,7 @@ Status:
                 status = "blocked"
             elif response == "c":
                 status = "closed"
+        os.system("clear")
 
         while due == str():
             response = input("\nDue today (y/n): ")
@@ -77,6 +80,7 @@ Status:
                 due = f"{month} {day}"
             elif response == "n":
                 due = "null"
+        os.system("clear")
 
         while len(priority) == 0:
             print(
@@ -107,7 +111,7 @@ Priorities:
         "due": due,
         "priority": priority,
     }
-
+    os.system("clear")
     return data
 
 
