@@ -7,12 +7,21 @@ import datetime
 from config import TB_PATH, TB_DIR, TB_INFO
 from index import index
 import sys
+import subprocess
 
 
 def init():
     tb_path = os.path.join(TB_PATH, TB_DIR)
     Path(tb_path).mkdir(parents=True, exist_ok=True)
     return "Success"
+
+
+def getClipboardData():
+    p = subprocess.Popen(["pbpaste"], stdout=subprocess.PIPE)
+    data = p.stdout.read()
+    cb = data.decode().strip()
+    if cb.startswith("http"):
+        return cb
 
 
 def user_input():
@@ -129,6 +138,10 @@ def create_text(dir, data):
     status = data["status"]
     due = data["due"]
     priority = data["priority"]
+    cb = getClipboardData()
+    cb_link = str()
+    if cb != None:
+        cb_link = f"\n[Link]({cb})\n"
 
     with open(f"{path}/text.markdown", "w") as f:
         note = f"""# {title}
@@ -144,6 +157,7 @@ priority: {priority}
 jira: null
 archive: false
 ```
+{cb_link}
 """
         f.write(note)
     return "Success"

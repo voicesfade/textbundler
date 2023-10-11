@@ -132,6 +132,12 @@ def format_bullet(bullet, archive=False):
                         line.append(
                             f'<span style="color:mediumseagreen">{tb_due.title()}</span>'
                         )
+        if "status" in bullet:
+            tb_status = bullet["status"]
+            if tb_status != None:
+                line.append(
+                    f'<span style="color:LightSlateGrey"><i>{tb_status.title()}</i></span>'
+                )
     else:
         if "category" in bullet:
             tb_category = bullet["category"]
