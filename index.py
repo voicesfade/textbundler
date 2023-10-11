@@ -135,8 +135,11 @@ def format_bullet(bullet, archive=False):
         if "status" in bullet:
             tb_status = bullet["status"]
             if tb_status != None:
+                tb_statuses = ["open", "in progress", "closed", "done", "in review"]
+                if tb_status in tb_statuses:
+                    tb_status = tb_status.title()
                 line.append(
-                    f'<span style="color:LightSlateGrey"><i>{tb_status.title()}</i></span>'
+                    f'<span style="color:LightSlateGrey"><i>{tb_status}</i></span>'
                 )
     else:
         if "category" in bullet:
